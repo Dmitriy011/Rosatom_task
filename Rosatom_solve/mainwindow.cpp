@@ -23,6 +23,11 @@ void parse_QString_to_Rectangles(std::vector<Rectangle>& rectangles, QString str
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ui->tableWidget->setRowCount(1);
+    ui->tableWidget->setColumnCount(2);
+
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "length width" << "count");
 }
 
 MainWindow::~MainWindow()
@@ -32,10 +37,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::print_rectangles(std::vector<Rectangle>& rectangles, int lenght_main, int width_main, int count_list)
 {
-    int height_scene = 100;
-    int width_scene = 100;
     scene.clear();
-    scene.setSceneRect(0, 0, height_scene, width_scene);
+    scene.setSceneRect(0, 0, width_main, lenght_main);
+
     QGraphicsRectItem *rect = scene.addRect(0, 0, width_main, lenght_main);
     rect->setBrush(Qt::NoBrush);
     rect->setPen(QPen(Qt::black));
@@ -54,6 +58,7 @@ void MainWindow::print_rectangles(std::vector<Rectangle>& rectangles, int lenght
     }
 
     ui->graphicsView->setScene(&scene);
+    ui->graphicsView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -177,4 +182,45 @@ void MainWindow::on_Button_test5_clicked()
     ui->label_8->setText(QString::number(count_of_manufactured));
 
     print_rectangles(rectangles, lenght_main, width_main, count_list);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    int row = ui->tableWidget->rowCount();
+    ui->tableWidget->insertRow(row); // Добавляем строку
+}
+
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    int lenght_main = ui->lenght_main_list_2->text().toInt();
+    int width_main = ui->width_main_list_2->text().toInt();
+
+    std::vector<Rectangle> rectangles;
+
+    for (int i = 0; i < ui->tableWidget->rowCount(); ++i)
+    {
+        QTableWidgetItem *param = ui->tableWidget->item(i, 0);
+        QTableWidgetItem *count_q = ui->tableWidget->item(i, 1);
+        int count = count_q->text().toInt();
+
+        if (param)
+        {
+            for (int j = 0; j < count; ++j)
+            {
+                QString tmp_val = param->text();
+
+                QStringList values = tmp_val.split(" ");
+                Rectangle tmp_rectangle (values[0].toInt(), values[1].toInt());
+                rectangles.push_back(tmp_rectangle);
+            }
+        }
+    }
+
+    int count_of_manufactured = 0;
+
+    calculate_coord_rectangles(rectangles, lenght_main, width_main, rectangles.size(), count_of_manufactured);
+    ui->label_8->setText(QString::number(count_of_manufactured));
+
+    print_rectangles(rectangles, lenght_main, width_main, rectangles.size());
 }
