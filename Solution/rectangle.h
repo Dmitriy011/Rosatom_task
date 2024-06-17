@@ -13,7 +13,16 @@ public:
         square = _length * _width;
 
         is_rotated = false;
-        x = 400;
+        this->x = 400;
+        y = 0;
+    }
+
+    Rectangle(int _length, int _width, int x_isnt_fit): length(_length), width(_width)
+    {
+        square = _length * _width;
+
+        is_rotated = false;
+        this->x = x_isnt_fit;
         y = 0;
     }
 

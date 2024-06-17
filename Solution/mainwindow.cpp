@@ -90,7 +90,7 @@ void MainWindow::on_pushButton_clicked()
             QString tmp_val = param->text();
 
             QStringList values = tmp_val.split(" ");
-            Rectangle tmp_rectangle (values[0].toInt(), values[1].toInt());
+            Rectangle tmp_rectangle (values[0].toInt(), values[1].toInt(), width_main + 200);
             rectangles.push_back(tmp_rectangle);
             amount++;
         }
